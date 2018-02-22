@@ -21,7 +21,9 @@
     "deploy": "npm run build:demo && gh-pages -d build",
     "storybook": "cross-env TARGET=development start-storybook -p ${PORT:-3001} -h 0.0.0.0",
     "build-storybook": "cross-env NODE_ENV=production TARGET=demo build-storybook -o build/storybook",
-    "flow": "flow"
+    "flow": "flow",
+    "flow-typed": "rimraf flow-typed/npm && flow-typed install --overwrite || true",
+    "postinstall": "npm run flow-typed"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js",
@@ -49,6 +51,7 @@
   "dependencies": {
     "@shopify/draggable": "^1.0.0-beta.4",
     "classnames": "^2.2.5",
+    "flow-typed": "^2.3.0",
     "prop-types": "^15.6.0"
   },
   "devDependencies": {
@@ -63,6 +66,7 @@
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.4.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
