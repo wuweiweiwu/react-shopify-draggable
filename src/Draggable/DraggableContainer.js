@@ -1,33 +1,33 @@
 // @flow
 import React, { Component, type Node, cloneElement, Children } from 'react';
-import classNames from 'classnames';
 import Draggable from '@shopify/draggable/lib/draggable';
 
 type Props = {
-  draggable: string,
-  handle: string,
+  draggable: ?string, // classname for the draggable item
+  handle: ?string, // classname for the handles
   delay?: number,
   classes?: { [string]: string }, // add classes to elements to indicate state
   draggableRef?: any => void, // ref so you can access the Draggable object to override stuff if u want. Like event listeners
 
   as: string, // what to render the container as
   className?: string, // classname for the container
+  id?: string, // id for the container
   style?: { [string]: string | number }, //inline styling
   children: Node,
 };
 
 class ContextWrapper {
-  draggableClassName: string;
-  handleClassName: string;
+  draggableClassName: ?string;
+  handleClassName: ?string;
   subscriptions: Array<() => void>;
 
-  constructor(props) {
+  constructor(props: Props) {
     this.draggableClassName = props.draggable;
     this.handleClassName = props.handle;
     this.subscriptions = [];
   }
 
-  update(props) {
+  update(props: Props) {
     this.draggableClassName = props.draggable;
     this.handleClassName = props.handle;
     this.subscriptions.forEach(f => f());
@@ -39,13 +39,13 @@ class ContextWrapper {
 }
 
 class DraggableContainer extends Component<Props> {
-  draggableInstance: ?any;
+  draggableInstance: ?Draggable;
   ownInstance: ?HTMLElement;
   contextWrapper: ContextWrapper;
 
   static defaultProps = {
     as: 'div',
-    draggable: '.draggable-source',
+    draggable: 'draggable-source',
     handle: null,
   };
 
@@ -60,20 +60,35 @@ class DraggableContainer extends Component<Props> {
     };
   }
 
+  // decide if we want to update the context and force the children to rerender
   componentWillReceiveProps(nextProps: Props) {
-    this.contextWrapper.update(nextProps);
+    if (
+      this.props.draggable !== nextProps.draggable ||
+      this.props.handle !== nextProps.handle
+    ) {
+      this.contextWrapper.update(nextProps);
+    }
   }
 
   componentDidMount() {
     const { draggable, handle, classes, delay, draggableRef } = this.props;
 
+    const options = {};
+    if (draggable) {
+      options.draggable = `.${draggable}`;
+    }
+    if (handle) {
+      options.handle = `.${handle}`;
+    }
+    if (classes) {
+      options.classes = classes;
+    }
+    if (delay) {
+      options.delay = delay;
+    }
+
     if (this.ownInstance) {
-      this.draggableInstance = new Draggable(this.ownInstance, {
-        draggable,
-        handle,
-        classes,
-        delay,
-      });
+      this.draggableInstance = new Draggable(this.ownInstance, options);
 
       if (draggableRef) {
         draggableRef(this.draggableInstance);
@@ -82,10 +97,11 @@ class DraggableContainer extends Component<Props> {
   }
 
   render() {
-    const { as: ElementType, className, style, children } = this.props;
+    const { as: ElementType, id, className, style, children } = this.props;
 
     return (
       <ElementType
+        id={id}
         className={className}
         style={style}
         ref={element => {
