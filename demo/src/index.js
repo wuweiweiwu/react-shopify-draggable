@@ -1,17 +1,23 @@
-import React, { Component } from 'react';
-import { render } from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
 
-import Example from '../../src';
+import App from './App';
 
-class Demo extends Component {
-  render() {
-    return (
-      <div>
-        <h1>react-shopify-draggable Demo</h1>
-        <Example />
-      </div>
-    );
-  }
+const render = Component => {
+  ReactDOM.render(
+    <AppContainer>
+      <Component />
+    </AppContainer>,
+    document.getElementById('demo'),
+  )
 }
 
-render(<Demo />, document.querySelector('#demo'));
+render(App)
+
+// Webpack Hot Module Replacement API
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    render(App)
+  })
+}
