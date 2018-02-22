@@ -1,7 +1,7 @@
 {
   "name": "react-shopify-draggable",
   "version": "1.0.0",
-  "description": "react-shopify-draggable React component",
+  "description": "Port of @shopify/draggable to React",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
@@ -16,18 +16,31 @@
     "start": "nwb serve-react-demo",
     "test": "nwb test-react",
     "test:coverage": "nwb test-react --coverage",
-    "test:watch": "nwb test-react --server"
+    "test:watch": "nwb test-react --server",
+    "lint": "eslint src demo",
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"{src,demo}/**/*.{js,css,md}\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "@shopify/draggable": "^1.0.0-beta.4",
+    "classnames": "^2.2.5"
+  },
   "peerDependencies": {
-    "react": "16.x"
+    "react": "16.x",
+    "react-dom": "16.x"
   },
   "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
     "nwb": "0.21.x",
+    "prettier": "^1.10.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
-  "author": "",
+  "author": "Wei-Wei Wu hello@weiweiwu.me",
   "homepage": "",
   "license": "MIT",
   "repository": "",
