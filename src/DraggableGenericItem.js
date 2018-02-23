@@ -3,7 +3,7 @@ import React, { PureComponent, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-export type DraggableType = 'handle' | 'item' | 'zone';
+export type DraggableItemType = 'handle' | 'item' | 'zone';
 
 export type Props = {
   // what to render the container as
@@ -20,10 +20,10 @@ export type Props = {
   children?: Node,
 
   // what kind of Draggable element is it
-  type: DraggableType,
+  type: DraggableItemType,
 };
 
-class DraggableGeneric extends PureComponent<Props> {
+class DraggableGenericItem extends PureComponent<Props> {
   static contextTypes = {
     contextWrapper: PropTypes.object,
   };
@@ -65,4 +65,4 @@ class DraggableGeneric extends PureComponent<Props> {
   }
 }
 
-export default DraggableGeneric;
+export default DraggableGenericItem;
