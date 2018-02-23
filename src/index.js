@@ -1,6 +1,6 @@
 import DraggableItem from './DraggableItem';
-import DraggableContainer from './DraggableContainer';
+import DraggableProvider from './DraggableProvider';
 import DraggableHandle from './DraggableHandle';
 import DroppableZone from './DroppableZone';
 
-export { DraggableItem, DraggableContainer, DraggableHandle, DroppableZone };
+export { DraggableItem, DraggableProvider, DraggableHandle, DroppableZone };

@@ -11,34 +11,11 @@ import {
   Swappable,
   Sortable,
 } from '@shopify/draggable';
+import ContextWrapper from './ContextWrapper';
+
 const { Sensor: BaseSensor } = Sensors;
 
-class ContextWrapper {
-  draggable: ?string;
-  handle: ?string;
-  droppable: ?string;
-  subscriptions: Array<() => void>;
-
-  constructor(props: Props) {
-    this.draggable = props.draggable;
-    this.handle = props.handle;
-    this.droppable = props.droppable;
-    this.subscriptions = [];
-  }
-
-  update(props: Props) {
-    this.draggable = props.draggable;
-    this.handle = props.handle;
-    this.droppable = props.droppable;
-    this.subscriptions.forEach(f => f());
-  }
-
-  subscribe(f) {
-    this.subscriptions.push(f);
-  }
-}
-
-type Props = {
+export type Props = {
   // classname for the draggable item
   draggable: string,
 
@@ -108,7 +85,7 @@ type Props = {
   onSwappableStop?: BaseEvent => void,
 };
 
-class DraggableContainer extends PureComponent<Props> {
+class DraggableProvider extends PureComponent<Props> {
   draggableInstance: ?Draggable;
   ownInstance: ?HTMLElement;
   contextWrapper: ContextWrapper;
@@ -265,4 +242,4 @@ class DraggableContainer extends PureComponent<Props> {
   }
 }
 
-export default DraggableContainer;
+export default DraggableProvider;
