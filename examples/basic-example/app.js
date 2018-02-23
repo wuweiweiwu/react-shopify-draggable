@@ -9,7 +9,8 @@ import {
   DraggableHandle,
   DroppableZone,
 } from '../../src';
-import { Droppable } from '@shopify/draggable';
+// import { Droppable } from '@shopify/draggable';
+import NestedItem from './nestedItem';
 
 class App extends Component {
   // componentDidMount() {
@@ -54,10 +55,10 @@ class App extends Component {
   render() {
     return (
       <DraggableContainer
-        as="ul"
+        // as="ul"
         type="droppable"
         draggable="random-classname"
-        handle="handle-classname"
+        // handle="handle-classname"
         droppable="droppable-classname"
         dragRef={draggableInstance => (this.draggable = draggableInstance)}
         onDragStart={() => console.log('dragstart')}
@@ -65,15 +66,22 @@ class App extends Component {
         onDroppableOver={() => console.log('dropover')}
       >
         <DroppableZone
-          as="ul"
-          id="dropzone"
+          // as="ul"
           style={{ height: '300px', width: '300px', backgroundColor: 'yellow' }}
         >
-          <DraggableItem as="li" style={{ height: '100px', width: '200px' }}>
-            Draggable 1
+          <DraggableItem
+            // as="li"
+            style={{
+              height: '100px',
+              width: '200px',
+              borderStyle: 'dotted solid',
+            }}
+          >
+            {/* Draggable 1
             <DraggableHandle as="p" style={{ backgroundColor: 'black' }}>
               HANDLE
-            </DraggableHandle>
+            </DraggableHandle> */}
+            <NestedItem />
           </DraggableItem>
           {/* <DraggableItem as="li" style={{ height: '100px', width: '200px' }}>
             Draggable 2
@@ -84,8 +92,7 @@ class App extends Component {
         </DroppableZone>
 
         <DroppableZone
-          as="ul"
-          id="dropzone"
+          // as="ul"
           style={{ height: '300px', width: '300px', backgroundColor: 'red' }}
         />
       </DraggableContainer>
