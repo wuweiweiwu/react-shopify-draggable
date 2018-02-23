@@ -3,21 +3,25 @@ import React, { PureComponent, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-type Props = {
+export type DraggableTypes = 'handle' | 'item' | 'zone';
+
+export type Props = {
   as: string, // what to render the container as
   className?: string, // classname for the container
   id?: string, // id for the container
   style?: { [string]: string | number }, //inline styling
   children?: Node,
+  type: DraggableTypes,
 };
 
-class DraggableItem extends PureComponent<Props> {
+class DraggableGeneric extends PureComponent<Props> {
   static contextTypes = {
     contextWrapper: PropTypes.object,
   };
 
   static defaultProps = {
     as: 'div',
+    type: 'item',
   };
 
   // subscribe to context updates
@@ -26,15 +30,24 @@ class DraggableItem extends PureComponent<Props> {
   }
 
   render() {
-    const { as: ElementType, className, id, style, children } = this.props;
+    const {
+      as: ElementType,
+      className,
+      id,
+      style,
+      children,
+      type,
+    } = this.props;
 
     return (
       <ElementType
         id={id}
-        className={classNames([
+        className={classNames({
           className,
-          this.context.contextWrapper.draggable,
-        ])}
+          [this.context.contextWrapper.draggable]: type === 'item',
+          [this.context.contextWrapper.handle]: type === 'handle',
+          [this.context.contextWrapper.droppable]: type === 'zone',
+        })}
         style={style}
       >
         {children}
@@ -43,4 +56,4 @@ class DraggableItem extends PureComponent<Props> {
   }
 }
 
-export default DraggableItem;
+export default DraggableGeneric;
