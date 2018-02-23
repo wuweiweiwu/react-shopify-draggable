@@ -4,5 +4,6 @@
     "transform-object-rest-spread",
     "react-hot-loader/babel",
     "transform-class-properties"
-  ]
+  ],
+  "retainLines": true
 }
