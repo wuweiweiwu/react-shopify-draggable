@@ -85,7 +85,7 @@ export type Props = {
   onSwappableStop?: BaseEvent => void,
 };
 
-class DraggableProvider extends PureComponent<Props> {
+class DraggableContainer extends PureComponent<Props> {
   draggableInstance: ?Draggable;
   ownInstance: ?HTMLElement;
   contextWrapper: ContextWrapper;
@@ -242,4 +242,4 @@ class DraggableProvider extends PureComponent<Props> {
   }
 }
 
-export default DraggableProvider;
+export default DraggableContainer;

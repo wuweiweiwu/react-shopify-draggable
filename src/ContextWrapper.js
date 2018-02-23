@@ -1,4 +1,4 @@
-import { type Props } from './DraggableProvider';
+import { type Props } from './DraggableContainer';
 
 export default class ContextWrapper {
   draggable: ?string;
