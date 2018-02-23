@@ -1,5 +1,5 @@
 {
-  "name": "react-shopify-draggable",
+  "name": "@wuxx1045/react-shopify-draggable",
   "version": "0.0.1",
   "private": true,
   "main": "dist/main.js",
