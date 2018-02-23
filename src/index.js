@@ -1,3 +1,4 @@
+// @flow
 import DraggableContainer from './DraggableContainer';
 import getDraggableComponent from './getDraggableComponent';
 

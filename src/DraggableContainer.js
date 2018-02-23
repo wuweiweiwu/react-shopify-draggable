@@ -22,7 +22,7 @@ export type Props = {
   // classname for the handles
   handle: string,
 
-  //classname for the droppable area
+  // classname for the droppable area
   droppable: ?string,
 
   sensors: Array<BaseSensor>,
@@ -33,7 +33,7 @@ export type Props = {
   classes?: { [string]: string },
 
   // dragRef so you can access the Draggable object to override stuff if u want. Like event listeners
-  dragRef?: any => void,
+  dragRef?: Draggable => void,
 
   // what to append mirror to
   appendTo?: string | HTMLElement | (() => HTMLElement),
@@ -50,13 +50,14 @@ export type Props = {
   // id for the container
   id?: string,
 
-  //inline styling
+  // inline styling
   style?: { [string]: string | number },
 
   // children
   children: Node,
 
   // events for Draggable
+  /* eslint-disable react/no-unused-prop-types */
   onDragStart?: BaseEvent => void,
   onDragMove?: BaseEvent => void,
   onDragOver?: BaseEvent => void,
@@ -83,12 +84,13 @@ export type Props = {
   onSwappableStart?: BaseEvent => void,
   onSwappableSwapped?: BaseEvent => void,
   onSwappableStop?: BaseEvent => void,
+  /* eslint-enable react/no-unused-prop-types */
 };
 
 class DraggableContainer extends PureComponent<Props> {
+  contextWrapper: ContextWrapper; /* eslint-disable-line react/sort-comp */
   draggableInstance: ?Draggable;
   ownInstance: ?HTMLElement;
-  contextWrapper: ContextWrapper;
 
   static defaultProps = {
     as: 'div',
@@ -107,56 +109,43 @@ class DraggableContainer extends PureComponent<Props> {
   constructor(props: Props) {
     super(props);
     this.contextWrapper = new ContextWrapper(props);
+
+    /* eslint-disable flowtype/no-weak-types */
     (this: any).registerEvents = this.registerEvents.bind(this);
     (this: any).unregisterEvents = this.unregisterEvents.bind(this);
+    /* eslint-enable flowtype/no-weak-types */
   }
 
   registerEvents() {
-    Object.keys(this.props).forEach(propName => {
+    /* eslint-disable-next-line flowtype/no-weak-types */
+    _.forOwn(this.props, (propValue: any, propName: string) => {
       if (_.startsWith(propName, 'on') && _.isFunction(this.props[propName])) {
         const words = _.words(propName).slice(1);
         const eventName = _.toLower(_.join(words, ':'));
         if (this.draggableInstance) {
-          this.draggableInstance.on(eventName, this.props[propName]);
+          this.draggableInstance.on(eventName, propValue);
         }
       }
     });
   }
 
   unregisterEvents() {
-    Object.keys(this.props).forEach(propName => {
+    /* eslint-disable-next-line flowtype/no-weak-types */
+    _.forOwn(this.props, (propValue: any, propName: string) => {
       if (_.startsWith(propName, 'on') && _.isFunction(this.props[propName])) {
         const words = _.words(propName).slice(1);
         const eventName = _.toLower(_.join(words, ':'));
         if (this.draggableInstance) {
-          this.draggableInstance.off(eventName, this.props[propName]);
+          this.draggableInstance.off(eventName, propValue);
         }
       }
     });
   }
 
-  getChildContext() {
+  getChildContext(): { contextWrapper: ContextWrapper } {
     return {
       contextWrapper: this.contextWrapper,
     };
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    // decide if we want to update the context and force the children to rerender
-    if (
-      this.props.draggable !== nextProps.draggable ||
-      this.props.handle !== nextProps.handle
-    ) {
-      this.contextWrapper.update(nextProps);
-    }
-
-    // deregister all the event
-    this.unregisterEvents();
-  }
-
-  componentDidUpdate() {
-    // re register events if the component updates
-    this.registerEvents();
   }
 
   componentDidMount() {
@@ -218,13 +207,31 @@ class DraggableContainer extends PureComponent<Props> {
     }
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    // decide if we want to update the context and force the children to rerender
+    if (
+      this.props.draggable !== nextProps.draggable ||
+      this.props.handle !== nextProps.handle
+    ) {
+      this.contextWrapper.update(nextProps);
+    }
+
+    // deregister all the event
+    this.unregisterEvents();
+  }
+
+  componentDidUpdate() {
+    // re register events if the component updates
+    this.registerEvents();
+  }
+
   componentWillUnmount() {
     if (this.draggableInstance) {
       this.draggableInstance.destroy();
     }
   }
 
-  render() {
+  render(): Node {
     const { as: ElementType, id, className, style, children } = this.props;
 
     return (
@@ -232,7 +239,7 @@ class DraggableContainer extends PureComponent<Props> {
         id={id}
         className={className}
         style={style}
-        ref={element => {
+        ref={(element: ?HTMLElement) => {
           this.ownInstance = element;
         }}
       >

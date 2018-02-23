@@ -3,15 +3,24 @@ import React, { PureComponent, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-export type DraggableTypes = 'handle' | 'item' | 'zone';
+export type DraggableType = 'handle' | 'item' | 'zone';
 
 export type Props = {
-  as: string, // what to render the container as
-  className?: string, // classname for the container
-  id?: string, // id for the container
-  style?: { [string]: string | number }, //inline styling
+  // what to render the container as
+  as: string,
+
+  // classname for the container
+  className?: string,
+
+  // id for the container
+  id?: string,
+
+  // inline styling
+  style?: { [string]: string | number },
   children?: Node,
-  type: DraggableTypes,
+
+  // what kind of Draggable element is it
+  type: DraggableType,
 };
 
 class DraggableGeneric extends PureComponent<Props> {
@@ -26,10 +35,10 @@ class DraggableGeneric extends PureComponent<Props> {
 
   // subscribe to context updates
   componentDidMount() {
-    this.context.contextWrapper.subscribe(() => this.forceUpdate());
+    this.context.contextWrapper.subscribe((): void => this.forceUpdate());
   }
 
-  render() {
+  render(): Node {
     const {
       as: ElementType,
       className,
