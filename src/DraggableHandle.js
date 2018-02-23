@@ -11,7 +11,7 @@ type Props = {
   children?: Node,
 };
 
-class Handle extends PureComponent<Props> {
+class DraggableHandle extends PureComponent<Props> {
   static contextTypes = {
     contextWrapper: PropTypes.object,
   };
@@ -43,4 +43,4 @@ class Handle extends PureComponent<Props> {
   }
 }
 
-export default Handle;
+export default DraggableHandle;
