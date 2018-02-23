@@ -1,10 +1,15 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 
-import styles from './stylesheets/app.scss';
+// import styles from './stylesheets/app.scss';
 import '../shared/favicon/favicon.ico';
-import { Draggable, DraggableContainer, Handle } from '../../src';
-// import { Draggable } from '@shopify/draggable';
+import {
+  DraggableItem,
+  DraggableContainer,
+  DraggableHandle,
+  DroppableZone,
+} from '../../src';
+import { Droppable } from '@shopify/draggable';
 
 class App extends Component {
   // componentDidMount() {
@@ -16,32 +21,73 @@ class App extends Component {
   //   draggable.on('drag:move', () => console.log('drag:move'));
   //   draggable.on('drag:stop', () => console.log('drag:stop'));
   // }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     draggable: 'random-classname',
+  //   };
+  // }
   componentDidMount() {
-    if (this.draggable) {
-      this.draggable.on('drag:start', () => console.log('drag:start'));
-      this.draggable.on('drag:move', () => console.log('drag:move'));
-      this.draggable.on('drag:stop', () => console.log('drag:stop'));
-    }
+    // if (this.draggable) {
+    //   this.draggable.on('drag:start', () => console.log('drag:start'));
+    //   this.draggable.on('drag:move', () => console.log('drag:move'));
+    //   this.draggable.on('drag:stop', () => console.log('drag:stop'));
+    // }
+    // setInterval(
+    //   () =>
+    //     this.setState({
+    //       draggable: `Random-string${Math.random()}`,
+    //     }),
+    //   1000
+    // );
+    //
+    // import {Droppable} from '@shopify/draggable';
+    // const droppable = new Droppable(document.querySelectorAll('ul'), {
+    //   draggable: 'li',
+    //   droppable: '.dropzone',
+    // });
+    //
+    // droppable.on('droppable:over', () => console.log('droppable:over'));
+    // droppable.on('droppable:out', () => console.log('droppable:out'));
   }
 
   render() {
     return (
       <DraggableContainer
         as="ul"
-        draggable="draggable-classname"
+        type="droppable"
+        draggable="random-classname"
         handle="handle-classname"
-        draggableRef={draggableInstance => (this.draggable = draggableInstance)}
+        droppable="droppable-classname"
+        dragRef={draggableInstance => (this.draggable = draggableInstance)}
+        onDragStart={() => console.log('dragstart')}
+        onDragStop={() => console.log('dragstop')}
+        onDroppableOver={() => console.log('dropover')}
       >
-        <Draggable as="li" style={{ height: '100px', width: '100px' }}>
-          Draggable 1
-          <Handle as="p" style={{ backgroundColor: 'black' }}>
-            HANDLE
-          </Handle>
-        </Draggable>
-        <Draggable as="li">Draggable 2</Draggable>
-        <Draggable as="li">Draggable 3</Draggable>
-        <Draggable as="li">Draggable 4</Draggable>
-        <Draggable as="li">Draggable 5</Draggable>
+        <DroppableZone
+          as="ul"
+          id="dropzone"
+          style={{ height: '300px', width: '300px', backgroundColor: 'yellow' }}
+        >
+          <DraggableItem as="li" style={{ height: '100px', width: '200px' }}>
+            Draggable 1
+            <DraggableHandle as="p" style={{ backgroundColor: 'black' }}>
+              HANDLE
+            </DraggableHandle>
+          </DraggableItem>
+          {/* <DraggableItem as="li" style={{ height: '100px', width: '200px' }}>
+            Draggable 2
+            <DraggableHandle as="p" style={{ backgroundColor: 'black' }}>
+              HANDLE
+            </DraggableHandle>
+          </DraggableItem> */}
+        </DroppableZone>
+
+        <DroppableZone
+          as="ul"
+          id="dropzone"
+          style={{ height: '300px', width: '300px', backgroundColor: 'red' }}
+        />
       </DraggableContainer>
     );
   }
