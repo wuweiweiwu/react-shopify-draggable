@@ -56,8 +56,8 @@ export type Props = {
   // children
   children: Node,
 
-  // events for Draggable
   /* eslint-disable react/no-unused-prop-types */
+  // Draggable events
   onDragStart?: BaseEvent => void,
   onDragMove?: BaseEvent => void,
   onDragOver?: BaseEvent => void,
@@ -71,20 +71,50 @@ export type Props = {
   onMirrorMove?: BaseEvent => void,
   onMirrorDestroy?: BaseEvent => void,
 
-  // events for Droppable
+  // Droppable events
   onDroppableOver?: BaseEvent => void,
   onDroppableOut?: BaseEvent => void,
 
-  // events for Sortable
+  // Sortable events
   onSortableStart?: BaseEvent => void,
   onSortableSorted?: BaseEvent => void,
   onSortableStop?: BaseEvent => void,
 
-  // events for Swappable
+  // Swappable events
   onSwappableStart?: BaseEvent => void,
   onSwappableSwapped?: BaseEvent => void,
   onSwappableStop?: BaseEvent => void,
+
+  // Collidable events
+  onCollidableIn?: BaseEvent => void,
+  onCollidableOut?: BaseEvent => void,
+
+  // Snappable events
+  onSnapIn?: BaseEvent => void,
+  onSnapOut?: BaseEvent => void,
+
   /* eslint-enable react/no-unused-prop-types */
+
+  // Draggable base plugin options
+  // accessibility idk :(
+  mirror: {
+    xAxis: boolean,
+    yAxis: boolean,
+    constrainDimensions: boolean,
+  },
+
+  // Draggable base sensor options
+  // NONE :)
+
+  // Additional plugin options
+  // classname for the collidable element
+  collidable: ?string,
+
+  // options for SwappableAnimation
+  swapAnimation: {
+    duration: number,
+    easingFunction: string,
+  },
 };
 
 class DraggableContainer extends PureComponent<Props> {
@@ -100,6 +130,15 @@ class DraggableContainer extends PureComponent<Props> {
     sensors: [],
     plugins: [],
     delay: 100,
+    mirror: {
+      xAxis: true,
+      yAxis: true,
+      constrainDimensions: false,
+    },
+    swapAnimation: {
+      duration: 150,
+      easingFunction: 'ease-in-out',
+    },
   };
 
   static childContextTypes = {
@@ -113,6 +152,9 @@ class DraggableContainer extends PureComponent<Props> {
     /* eslint-disable flowtype/no-weak-types */
     (this: any).registerEvents = this.registerEvents.bind(this);
     (this: any).unregisterEvents = this.unregisterEvents.bind(this);
+    (this: any).instantiateDraggableInstance = this.instantiateDraggableInstance.bind(
+      this
+    );
     /* eslint-enable flowtype/no-weak-types */
   }
 
@@ -148,26 +190,33 @@ class DraggableContainer extends PureComponent<Props> {
     };
   }
 
-  componentDidMount() {
+  instantiateDraggableInstance() {
     const {
       draggable,
       handle,
       droppable,
       classes,
       delay,
-      dragRef,
       sensors,
       plugins,
       appendTo,
+      mirror,
+      collidable,
+      swapAnimation,
       type: draggableType,
     } = this.props;
 
     let options = {};
     options.draggable = `.${draggable}`;
     options.handle = handle ? `.${handle}` : null;
+    options.mirror = mirror;
+    options.swapAnimation = swapAnimation;
 
     if (droppable) {
       options.droppable = `.${droppable}`;
+    }
+    if (collidable) {
+      options.collidable = `.${collidable}`;
     }
     if (classes) {
       options.classes = classes;
@@ -175,7 +224,7 @@ class DraggableContainer extends PureComponent<Props> {
     if (appendTo) {
       options.appendTo = appendTo;
     }
-    options = Object.assign({}, options, {
+    options = _.assign({}, options, {
       delay,
       sensors,
       plugins,
@@ -198,6 +247,13 @@ class DraggableContainer extends PureComponent<Props> {
           break;
       }
     }
+  }
+
+  componentDidMount() {
+    const { dragRef } = this.props;
+
+    // create instance of Draggable
+    this.instantiateDraggableInstance();
 
     // register events
     this.registerEvents();
@@ -221,6 +277,9 @@ class DraggableContainer extends PureComponent<Props> {
   }
 
   componentDidUpdate() {
+    // re instaniate the Draggable instance
+    this.instantiateDraggableInstance();
+
     // re register events if the component updates
     this.registerEvents();
   }
