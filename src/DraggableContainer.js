@@ -25,17 +25,20 @@ const {
 class ContextWrapper {
   draggableClassName: ?string;
   handleClassName: ?string;
+  droppableClassName: ?string;
   subscriptions: Array<() => void>;
 
   constructor(props: Props) {
     this.draggableClassName = props.draggableClassName;
     this.handleClassName = props.handleClassName;
+    this.droppableClassName = props.droppableClassName;
     this.subscriptions = [];
   }
 
   update(props: Props) {
     this.draggableClassName = props.draggableClassName;
     this.handleClassName = props.handleClassName;
+    this.droppableClassName = props.droppableClassName;
     this.subscriptions.forEach(f => f());
   }
 
@@ -50,6 +53,9 @@ type Props = {
 
   // classname for the handles
   handleClassName: ?string,
+
+  //classname for the droppable area
+  droppableClassName: ?string,
 
   sensors: Array<BaseSensor>,
   plugins: Array<BasePlugin>,
@@ -220,18 +226,19 @@ class DraggableContainer extends PureComponent<Props> {
 
     if (this.ownInstance) {
       switch (draggableType) {
-        // case 'droppable':
-        //   this.draggableInstance = new Droppable(this.ownInstance, options);
-        //   break;
-        // case 'swappable':
-        //   this.draggableInstance = new Swappable(this.ownInstance, options);
-        //   break;
-        // case 'sortable':
-        //   this.draggableInstance = new Sortable(this.ownInstance, options);
-        //   break;
+        case 'droppable':
+          this.draggableInstance = new Droppable(this.ownInstance, options);
+          break;
+        case 'swappable':
+          this.draggableInstance = new Swappable(this.ownInstance, options);
+          break;
+        case 'sortable':
+          this.draggableInstance = new Sortable(this.ownInstance, options);
+          break;
         case 'draggable':
         default:
           this.draggableInstance = new Draggable(this.ownInstance, options);
+          break;
       }
     }
 
