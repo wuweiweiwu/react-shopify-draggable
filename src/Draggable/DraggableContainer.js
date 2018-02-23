@@ -52,7 +52,7 @@ type Props = {
 
   classes?: { [string]: string }, // add classes to elements to indicate state
   draggableRef?: any => void, // ref so you can access the Draggable object to override stuff if u want. Like event listeners
-  appendTo?: string | HTMLElement | any,
+  appendTo?: string | HTMLElement | (() => HTMLElement),
   events?: { [string]: (BaseEvent) => void },
 
   as: string, // what to render the container as
