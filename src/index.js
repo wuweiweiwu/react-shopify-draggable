@@ -1,5 +1,5 @@
-import Draggable from './Draggable/Draggable';
-import DraggableContainer from './Draggable/DraggableContainer';
-import Handle from './Draggable/Handle';
+import DraggableItem from './DraggableItem';
+import DraggableContainer from './DraggableContainer';
+import DraggableHandle from './DraggableHandle';
 
-export { Draggable, DraggableContainer, Handle };
+export { DraggableItem, DraggableContainer, DraggableHandle };
