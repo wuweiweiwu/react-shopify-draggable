@@ -55,8 +55,8 @@ type Props = {
   // add classes to elements to indicate state
   classes?: { [string]: string },
 
-  // ref so you can access the Draggable object to override stuff if u want. Like event listeners
-  draggableRef?: any => void,
+  // dragRef so you can access the Draggable object to override stuff if u want. Like event listeners
+  dragRef?: any => void,
 
   // what to append mirror to
   appendTo?: string | HTMLElement | (() => HTMLElement),
@@ -189,7 +189,7 @@ class DraggableContainer extends PureComponent<Props> {
       droppable,
       classes,
       delay,
-      draggableRef,
+      dragRef,
       sensors,
       plugins,
       appendTo,
@@ -236,8 +236,8 @@ class DraggableContainer extends PureComponent<Props> {
     // register events
     this.registerEvents();
 
-    if (draggableRef) {
-      draggableRef(this.draggableInstance);
+    if (dragRef) {
+      dragRef(this.draggableInstance);
     }
   }
 
