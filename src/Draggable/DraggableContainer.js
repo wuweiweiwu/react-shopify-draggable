@@ -1,21 +1,25 @@
 // @flow
-import React, { Component, type Node } from 'react';
+import React, { PureComponent, type Node } from 'react';
 import PropTypes from 'prop-types';
-import Draggable from '@shopify/draggable/lib/draggable';
+import {
+  BaseEvent,
+  // BasePlugin,
+  Sensors,
+  Plugins,
+  Draggable,
+  // Droppable,
+  // Swappable,
+  // Sortable,
+} from '@shopify/draggable';
 
-type Props = {
-  draggable: ?string, // classname for the draggable item
-  handle: ?string, // classname for the handles
-  delay?: number,
-  classes?: { [string]: string }, // add classes to elements to indicate state
-  draggableRef?: any => void, // ref so you can access the Draggable object to override stuff if u want. Like event listeners
-
-  as: string, // what to render the container as
-  className?: string, // classname for the container
-  id?: string, // id for the container
-  style?: { [string]: string | number }, //inline styling
-  children: Node,
-};
+const { Collidable, Snappable, SwapAnimation } = Plugins;
+const {
+  Sensor,
+  // MouseSensor,
+  // TouchSensor,
+  // DragSensor,
+  // ForceTouchSensor,
+} = Sensors;
 
 class ContextWrapper {
   draggableClassName: ?string;
@@ -39,7 +43,26 @@ class ContextWrapper {
   }
 }
 
-class DraggableContainer extends Component<Props> {
+type Props = {
+  draggable: ?string, // classname for the draggable item
+  handle: ?string, // classname for the handles
+  sensors: Array<Sensor>,
+  plugins: Array<Collidable | Snappable | SwapAnimation>,
+  delay: number,
+
+  classes?: { [string]: string }, // add classes to elements to indicate state
+  draggableRef?: any => void, // ref so you can access the Draggable object to override stuff if u want. Like event listeners
+  appendTo?: string | HTMLElement | any,
+  events?: { [string]: (BaseEvent) => void },
+
+  as: string, // what to render the container as
+  className?: string, // classname for the container
+  id?: string, // id for the container
+  style?: { [string]: string | number }, //inline styling
+  children: Node,
+};
+
+class DraggableContainer extends PureComponent<Props> {
   draggableInstance: ?Draggable;
   ownInstance: ?HTMLElement;
   contextWrapper: ContextWrapper;
@@ -48,6 +71,9 @@ class DraggableContainer extends Component<Props> {
     as: 'div',
     draggable: 'draggable-source',
     handle: null,
+    sensors: [],
+    plugins: [],
+    delay: 100,
   };
 
   static childContextTypes = {
@@ -76,9 +102,18 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentDidMount() {
-    const { draggable, handle, classes, delay, draggableRef } = this.props;
+    const {
+      draggable,
+      handle,
+      classes,
+      delay,
+      draggableRef,
+      sensors,
+      plugins,
+      appendTo,
+    } = this.props;
 
-    const options = {};
+    let options = {};
     if (draggable) {
       options.draggable = `.${draggable}`;
     }
@@ -88,9 +123,14 @@ class DraggableContainer extends Component<Props> {
     if (classes) {
       options.classes = classes;
     }
-    if (delay) {
-      options.delay = delay;
+    if (appendTo) {
+      options.appendTo = appendTo;
     }
+    options = Object.assign(options, {
+      delay,
+      sensors,
+      plugins,
+    });
 
     if (this.ownInstance) {
       this.draggableInstance = new Draggable(this.ownInstance, options);
