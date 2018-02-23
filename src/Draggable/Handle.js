@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, type Node } from 'react';
+import React, { PureComponent, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -11,7 +11,7 @@ type Props = {
   children?: Node,
 };
 
-class Handle extends Component<Props> {
+class Handle extends PureComponent<Props> {
   static contextTypes = {
     contextWrapper: PropTypes.object,
   };
