@@ -1,5 +1,6 @@
 // @flow
-import React, { Component, type Node, cloneElement, Children } from 'react';
+import React, { Component, type Node } from 'react';
+import PropTypes from 'prop-types';
 import Draggable from '@shopify/draggable/lib/draggable';
 
 type Props = {
@@ -49,6 +50,10 @@ class DraggableContainer extends Component<Props> {
     handle: null,
   };
 
+  static childContextTypes = {
+    contextWrapper: PropTypes.object,
+  };
+
   constructor(props: Props) {
     super(props);
     this.contextWrapper = new ContextWrapper(props);
@@ -93,6 +98,12 @@ class DraggableContainer extends Component<Props> {
       if (draggableRef) {
         draggableRef(this.draggableInstance);
       }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.draggableInstance) {
+      this.draggableInstance.destroy();
     }
   }
 
