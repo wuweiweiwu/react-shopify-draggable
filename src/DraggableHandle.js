@@ -33,7 +33,7 @@ class DraggableHandle extends PureComponent<Props> {
         id={id}
         className={classNames([
           className,
-          this.context.contextWrapper.handleClassName,
+          this.context.contextWrapper.handle,
         ])}
         style={style}
       >

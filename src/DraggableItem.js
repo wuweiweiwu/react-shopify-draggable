@@ -33,7 +33,7 @@ class DraggableItem extends PureComponent<Props> {
         id={id}
         className={classNames([
           className,
-          this.context.contextWrapper.draggableClassName,
+          this.context.contextWrapper.draggable,
         ])}
         style={style}
       >

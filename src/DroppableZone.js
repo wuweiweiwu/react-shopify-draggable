@@ -33,7 +33,7 @@ class DroppableZone extends PureComponent<Props> {
         id={id}
         className={classNames([
           className,
-          this.context.contextWrapper.droppableClassName,
+          this.context.contextWrapper.droppable,
         ])}
         style={style}
       >

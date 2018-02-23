@@ -6,39 +6,30 @@ import {
   BaseEvent,
   BasePlugin,
   Sensors,
-  // Plugins,
   Draggable,
   Droppable,
   Swappable,
   Sortable,
 } from '@shopify/draggable';
-
-// const { Collidable, Snappable, SwapAnimation } = Plugins;
-const {
-  Sensor: BaseSensor,
-  // MouseSensor,
-  // TouchSensor,
-  // DragSensor,
-  // ForceTouchSensor,
-} = Sensors;
+const { Sensor: BaseSensor } = Sensors;
 
 class ContextWrapper {
-  draggableClassName: ?string;
-  handleClassName: ?string;
-  droppableClassName: ?string;
+  draggable: ?string;
+  handle: ?string;
+  droppable: ?string;
   subscriptions: Array<() => void>;
 
   constructor(props: Props) {
-    this.draggableClassName = props.draggableClassName;
-    this.handleClassName = props.handleClassName;
-    this.droppableClassName = props.droppableClassName;
+    this.draggable = props.draggable;
+    this.handle = props.handle;
+    this.droppable = props.droppable;
     this.subscriptions = [];
   }
 
   update(props: Props) {
-    this.draggableClassName = props.draggableClassName;
-    this.handleClassName = props.handleClassName;
-    this.droppableClassName = props.droppableClassName;
+    this.draggable = props.draggable;
+    this.handle = props.handle;
+    this.droppable = props.droppable;
     this.subscriptions.forEach(f => f());
   }
 
@@ -49,13 +40,13 @@ class ContextWrapper {
 
 type Props = {
   // classname for the draggable item
-  draggableClassName: ?string,
+  draggable: string,
 
   // classname for the handles
-  handleClassName: ?string,
+  handle: string,
 
   //classname for the droppable area
-  droppableClassName: ?string,
+  droppable: ?string,
 
   sensors: Array<BaseSensor>,
   plugins: Array<BasePlugin>,
@@ -125,8 +116,8 @@ class DraggableContainer extends PureComponent<Props> {
   static defaultProps = {
     as: 'div',
     draggable: 'draggable-source',
-    type: 'draggable',
     handle: null,
+    type: 'draggable',
     sensors: [],
     plugins: [],
     delay: 100,
@@ -176,8 +167,8 @@ class DraggableContainer extends PureComponent<Props> {
   componentWillReceiveProps(nextProps: Props) {
     // decide if we want to update the context and force the children to rerender
     if (
-      this.props.draggableClassName !== nextProps.draggableClassName ||
-      this.props.handleClassName !== nextProps.handleClassName
+      this.props.draggable !== nextProps.draggable ||
+      this.props.handle !== nextProps.handle
     ) {
       this.contextWrapper.update(nextProps);
     }
@@ -187,15 +178,15 @@ class DraggableContainer extends PureComponent<Props> {
   }
 
   componentDidUpdate() {
-    console.log('componentDidUpdate');
     // re register events if the component updates
     this.registerEvents();
   }
 
   componentDidMount() {
     const {
-      draggableClassName,
-      handleClassName,
+      draggable,
+      handle,
+      droppable,
       classes,
       delay,
       draggableRef,
@@ -206,11 +197,11 @@ class DraggableContainer extends PureComponent<Props> {
     } = this.props;
 
     let options = {};
-    if (draggableClassName) {
-      options.draggable = `.${draggableClassName}`;
-    }
-    if (handleClassName) {
-      options.handle = `.${handleClassName}`;
+    options.draggable = `.${draggable}`;
+    options.handle = handle ? `.${handle}` : null;
+
+    if (droppable) {
+      options.droppable = `.${droppable}`;
     }
     if (classes) {
       options.classes = classes;
