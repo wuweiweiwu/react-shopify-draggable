@@ -19,6 +19,17 @@ This is the base component that wraps `<DraggableItem/>`,`<DraggableHandle/>`, `
 
 You specify the `draggable`, `handle`, `droppable` props in this component and they will automatically be passed (deeply) to the `Draggable` children via React Context
 
+Props that will cause a re-rendering of self (and also child `Draggable` components):
+
+* `as`
+* `children` (Nodes passed/nested as children)
+
+Props that will **only** cause a re-rendering of child `Draggable` components:
+
+* `draggable`
+* `handle`
+* `droppable`
+
 | Props         | Type                                                              | Default                                                    | Description                                                                                 |
 | ------------- | ----------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | as            | `string`                                                          | `'div'`                                                    | what to render this component as                                                            |
@@ -90,6 +101,11 @@ onSnapOut?: BaseEvent => void,
 
 **NOTE #2:** If you set the `handle` prop for `DraggableContainer` but don't have a `DraggableHandle` inside the container then it won't work.
 
+Props that will cause a re-rendering of self (and child components where `shouldComponentUpdate` returns `true`):
+
+* `as`
+* `children` (Nodes passed/nested as children)
+
 | Props     | Type                  | Default | Description                                                                                 |
 | --------- | --------------------- | ------- | ------------------------------------------------------------------------------------------- |
 | as        | `string`              | `'div'` | what to render this component as                                                            |
@@ -115,6 +131,9 @@ npm test
 
 # Lints the code with eslint
 npm run lint
+
+# run flow type checking
+npm run flow
 
 # Lints and builds the code, placing the result in the dist directory.
 # This build is necessary to reflect changes if you're
