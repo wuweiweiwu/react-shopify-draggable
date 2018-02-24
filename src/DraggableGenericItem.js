@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, type Node } from 'react';
+import React, { Component, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -15,15 +15,18 @@ export type Props = {
   // id for the container
   id?: string,
 
-  // inline styling
-  style?: { [string]: string | number },
   children?: Node,
+
+  // eleRef so you can access the html element ex: styling
+  eleRef?: (?HTMLElement) => void,
 
   // what kind of Draggable element is it
   type: DraggableItemType,
 };
 
-class DraggableGenericItem extends PureComponent<Props> {
+class DraggableGenericItem extends Component<Props> {
+  ownInstance: ?HTMLElement; /* eslint-disable-line react/sort-comp */
+
   static contextTypes = {
     contextWrapper: PropTypes.object,
   };
@@ -33,20 +36,38 @@ class DraggableGenericItem extends PureComponent<Props> {
     type: 'item',
   };
 
-  // subscribe to context updates
   componentDidMount() {
+    // subscribe to context updates
     this.context.contextWrapper.subscribe((): void => this.forceUpdate());
+
+    if (this.props.eleRef) {
+      this.props.eleRef(this.ownInstance);
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    // handle id, className without rerendering
+    if (this.props.id !== nextProps.id) {
+      if (this.ownInstance) {
+        this.ownInstance.id = nextProps.id || '';
+      }
+    }
+    if (this.props.className !== nextProps.className) {
+      if (this.ownInstance) {
+        this.ownInstance.className = nextProps.className || '';
+      }
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Props): boolean {
+    if (this.props.as !== nextProps.as || this.props.type !== nextProps.type) {
+      return true;
+    }
+    return false;
   }
 
   render(): Node {
-    const {
-      as: ElementType,
-      className,
-      id,
-      style,
-      children,
-      type,
-    } = this.props;
+    const { as: ElementType, className, id, children, type } = this.props;
 
     return (
       <ElementType
@@ -57,7 +78,9 @@ class DraggableGenericItem extends PureComponent<Props> {
           [this.context.contextWrapper.handle]: type === 'handle',
           [this.context.contextWrapper.droppable]: type === 'zone',
         })}
-        style={style}
+        ref={(element: ?HTMLElement) => {
+          this.ownInstance = element;
+        }}
       >
         {children}
       </ElementType>

@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, type Node } from 'react';
+import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {
@@ -16,31 +16,6 @@ import ContextWrapper from './ContextWrapper';
 const { Sensor: BaseSensor } = Sensors;
 
 export type Props = {
-  // classname for the draggable item
-  draggable: string,
-
-  // classname for the handles
-  handle: string,
-
-  // classname for the droppable area
-  droppable: ?string,
-
-  sensors: Array<BaseSensor>,
-  plugins: Array<BasePlugin>,
-  delay: number,
-
-  // add classes to elements to indicate state
-  classes?: { [string]: string },
-
-  // dragRef so you can access the Draggable object to override stuff if u want. Like event listeners
-  dragRef?: Draggable => void,
-
-  // what to append mirror to
-  appendTo?: string | HTMLElement | (() => HTMLElement),
-
-  // WHAT TO USE
-  type: 'draggable' | 'droppable' | 'swappable' | 'sortable',
-
   // what to render the container as
   as: string,
 
@@ -50,13 +25,59 @@ export type Props = {
   // id for the container
   id?: string,
 
-  // inline styling
-  style?: { [string]: string | number },
-
   // children
   children: Node,
 
+  // dragRef so you can access the Draggable object to override stuff if u want. Like event listeners
+  dragRef?: (?Draggable) => void,
+
+  // eleRef so you can access the html element ex: styling
+  eleRef?: (?HTMLElement) => void,
+
+  // classname for the draggable item
+  draggable: string,
+
+  // classname for the handles
+  handle: string,
+
+  // classname for the droppable area
+  droppable: ?string,
+
   /* eslint-disable react/no-unused-prop-types */
+  sensors: Array<BaseSensor>,
+  plugins: Array<BasePlugin>,
+  delay: number,
+
+  // add classes to elements to indicate state
+  classes?: { [string]: string },
+
+  // what to append mirror to
+  appendTo?: string | HTMLElement | (() => HTMLElement),
+
+  // WHAT TO USE
+  type: 'draggable' | 'droppable' | 'swappable' | 'sortable',
+
+  // Draggable base plugin options
+  // accessibility idk :(
+  mirror: {
+    xAxis: boolean,
+    yAxis: boolean,
+    constrainDimensions: boolean,
+  },
+
+  // Draggable base sensor options
+  // NONE :)
+
+  // Additional plugin options
+  // classname for the collidable element
+  collidable: ?string,
+
+  // options for SwappableAnimation
+  swapAnimation: {
+    duration: number,
+    easingFunction: string,
+  },
+
   // Draggable events
   onDragStart?: BaseEvent => void,
   onDragMove?: BaseEvent => void,
@@ -94,32 +115,10 @@ export type Props = {
   // Snappable events
   onSnapIn?: BaseEvent => void,
   onSnapOut?: BaseEvent => void,
-
   /* eslint-enable react/no-unused-prop-types */
-
-  // Draggable base plugin options
-  // accessibility idk :(
-  mirror: {
-    xAxis: boolean,
-    yAxis: boolean,
-    constrainDimensions: boolean,
-  },
-
-  // Draggable base sensor options
-  // NONE :)
-
-  // Additional plugin options
-  // classname for the collidable element
-  collidable: ?string,
-
-  // options for SwappableAnimation
-  swapAnimation: {
-    duration: number,
-    easingFunction: string,
-  },
 };
 
-class DraggableContainer extends PureComponent<Props> {
+class DraggableContainer extends Component<Props> {
   contextWrapper: ContextWrapper; /* eslint-disable-line react/sort-comp */
   draggableInstance: ?Draggable;
   ownInstance: ?HTMLElement;
@@ -153,17 +152,17 @@ class DraggableContainer extends PureComponent<Props> {
 
     /* eslint-disable flowtype/no-weak-types */
     (this: any).registerEvents = this.registerEvents.bind(this);
-    (this: any).unregisterEvents = this.unregisterEvents.bind(this);
+    // (this: any).unregisterEvents = this.unregisterEvents.bind(this);
     (this: any).instantiateDraggableInstance = this.instantiateDraggableInstance.bind(
       this
     );
     /* eslint-enable flowtype/no-weak-types */
   }
 
-  registerEvents() {
+  registerEvents(props: Props) {
     /* eslint-disable-next-line flowtype/no-weak-types */
-    _.forOwn(this.props, (propValue: any, propName: string) => {
-      if (_.startsWith(propName, 'on') && _.isFunction(this.props[propName])) {
+    _.forOwn(props, (propValue: any, propName: string) => {
+      if (_.startsWith(propName, 'on') && _.isFunction(props[propName])) {
         const words = _.words(propName).slice(1);
         const eventName = _.toLower(_.join(words, ':'));
         if (this.draggableInstance) {
@@ -173,18 +172,18 @@ class DraggableContainer extends PureComponent<Props> {
     });
   }
 
-  unregisterEvents() {
-    /* eslint-disable-next-line flowtype/no-weak-types */
-    _.forOwn(this.props, (propValue: any, propName: string) => {
-      if (_.startsWith(propName, 'on') && _.isFunction(this.props[propName])) {
-        const words = _.words(propName).slice(1);
-        const eventName = _.toLower(_.join(words, ':'));
-        if (this.draggableInstance) {
-          this.draggableInstance.off(eventName, propValue);
-        }
-      }
-    });
-  }
+  // unregisterEvents(props: Props) {
+  //   /* eslint-disable-next-line flowtype/no-weak-types */
+  //   _.forOwn(props, (propValue: any, propName: string) => {
+  //     if (_.startsWith(propName, 'on') && _.isFunction(props[propName])) {
+  //       const words = _.words(propName).slice(1);
+  //       const eventName = _.toLower(_.join(words, ':'));
+  //       if (this.draggableInstance) {
+  //         this.draggableInstance.off(eventName, propValue);
+  //       }
+  //     }
+  //   });
+  // }
 
   getChildContext(): { contextWrapper: ContextWrapper } {
     return {
@@ -192,7 +191,7 @@ class DraggableContainer extends PureComponent<Props> {
     };
   }
 
-  instantiateDraggableInstance() {
+  instantiateDraggableInstance(props: Props) {
     const {
       draggable,
       handle,
@@ -206,7 +205,7 @@ class DraggableContainer extends PureComponent<Props> {
       collidable,
       swapAnimation,
       type: draggableType,
-    } = this.props;
+    } = props;
 
     let options = {};
     options.draggable = `.${draggable}`;
@@ -252,16 +251,19 @@ class DraggableContainer extends PureComponent<Props> {
   }
 
   componentDidMount() {
-    const { dragRef } = this.props;
+    const { dragRef, eleRef } = this.props;
 
-    // create instance of Draggable
-    this.instantiateDraggableInstance();
+    // creates the Draggable instance and register events
+    this.instantiateDraggableInstance(this.props);
+    this.registerEvents(this.props);
 
-    // register events
-    this.registerEvents();
-
+    // call the refs
     if (dragRef) {
       dragRef(this.draggableInstance);
+    }
+
+    if (eleRef) {
+      eleRef(this.ownInstance);
     }
   }
 
@@ -269,21 +271,46 @@ class DraggableContainer extends PureComponent<Props> {
     // decide if we want to update the context and force the children to rerender
     if (
       this.props.draggable !== nextProps.draggable ||
-      this.props.handle !== nextProps.handle
+      this.props.handle !== nextProps.handle ||
+      this.props.droppable !== nextProps.droppable
     ) {
       this.contextWrapper.update(nextProps);
     }
 
-    // deregister all the event
-    this.unregisterEvents();
+    // recreates the Draggable instance and register events
+    this.instantiateDraggableInstance(nextProps);
+    this.registerEvents(nextProps);
+
+    // handle id, className without rerendering
+    if (this.props.id !== nextProps.id) {
+      if (this.ownInstance) {
+        this.ownInstance.id = nextProps.id || '';
+      }
+    }
+    if (this.props.className !== nextProps.className) {
+      if (this.ownInstance) {
+        this.ownInstance.className = nextProps.className || '';
+      }
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Props): boolean {
+    // only update if the draggable or handle or droppable classnames change
+    if (
+      this.props.draggable !== nextProps.draggable ||
+      this.props.handle !== nextProps.handle ||
+      this.props.droppable !== nextProps.droppable ||
+      this.props.as !== nextProps.as
+    ) {
+      return true;
+    }
+    return false;
   }
 
   componentDidUpdate() {
-    // re instaniate the Draggable instance
-    this.instantiateDraggableInstance();
-
-    // re register events if the component updates
-    this.registerEvents();
+    // recreates the Draggable instance and register events
+    this.instantiateDraggableInstance(this.props);
+    this.registerEvents(this.props);
   }
 
   componentWillUnmount() {
@@ -293,13 +320,12 @@ class DraggableContainer extends PureComponent<Props> {
   }
 
   render(): Node {
-    const { as: ElementType, id, className, style, children } = this.props;
+    const { as: ElementType, id, className, children } = this.props;
 
     return (
       <ElementType
         id={id}
         className={className}
-        style={style}
         ref={(element: ?HTMLElement) => {
           this.ownInstance = element;
         }}
