@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable no-console */
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -207,6 +208,12 @@ class DraggableContainer extends Component<Props> {
       type: draggableType,
     } = props;
 
+    // IMPORTANT NEED TO DESTROY PREVIOUS INSTANCE
+    if (this.draggableInstance) {
+      this.draggableInstance.destroy();
+      console.log('destroy instance');
+    }
+
     let options = {};
     options.draggable = `.${draggable}`;
     options.handle = handle ? `.${handle}` : null;
@@ -232,6 +239,7 @@ class DraggableContainer extends Component<Props> {
     });
 
     if (this.ownInstance) {
+      console.log('creating new instance');
       switch (draggableType) {
         case 'droppable':
           this.draggableInstance = new Droppable(this.ownInstance, options);
@@ -251,6 +259,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     const { dragRef, eleRef } = this.props;
 
     // creates the Draggable instance and register events
@@ -268,6 +277,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    console.log('componentWillReceiveProps');
     // decide if we want to update the context and force the children to rerender
     if (
       this.props.draggable !== nextProps.draggable ||
@@ -295,6 +305,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
+    console.log('shouldComponentUpdate');
     // only update if the draggable or handle or droppable classnames change
     if (
       this.props.draggable !== nextProps.draggable ||
@@ -308,18 +319,21 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentDidUpdate() {
+    console.log('componentDidUpdate');
     // recreates the Draggable instance and register events
     this.instantiateDraggableInstance(this.props);
     this.registerEvents(this.props);
   }
 
   componentWillUnmount() {
+    console.log('componentWillUnmount');
     if (this.draggableInstance) {
       this.draggableInstance.destroy();
     }
   }
 
   render(): Node {
+    console.log('render');
     const { as: ElementType, id, className, children } = this.props;
 
     return (
@@ -327,6 +341,7 @@ class DraggableContainer extends Component<Props> {
         id={id}
         className={className}
         ref={(element: ?HTMLElement) => {
+          console.log('ref updated');
           this.ownInstance = element;
         }}
       >

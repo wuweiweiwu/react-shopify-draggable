@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable no-console */
 import React, { Component, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -37,6 +38,7 @@ class DraggableGenericItem extends Component<Props> {
   };
 
   componentDidMount() {
+    console.log('child componentDidMount');
     // subscribe to context updates
     this.context.contextWrapper.subscribe((): void => this.forceUpdate());
 
@@ -46,6 +48,7 @@ class DraggableGenericItem extends Component<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    console.log('child componentWillReceiveProps');
     // handle id, className without rerendering
     if (this.props.id !== nextProps.id) {
       if (this.ownInstance) {
@@ -60,6 +63,7 @@ class DraggableGenericItem extends Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
+    console.log('child shouldComponentUpdate');
     if (this.props.as !== nextProps.as || this.props.type !== nextProps.type) {
       return true;
     }
@@ -67,6 +71,7 @@ class DraggableGenericItem extends Component<Props> {
   }
 
   render(): Node {
+    console.log('child render');
     const { as: ElementType, className, id, children, type } = this.props;
 
     return (
