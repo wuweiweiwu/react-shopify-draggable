@@ -292,12 +292,12 @@ class DraggableContainer extends Component<Props> {
     this.registerEvents(nextProps);
 
     // handle id, className without rerendering
-    if (this.props.id !== nextProps.id) {
+    if (!_.isEqual(this.props.id, nextProps.id)) {
       if (this.ownInstance) {
         this.ownInstance.id = nextProps.id || '';
       }
     }
-    if (this.props.className !== nextProps.className) {
+    if (!_.isEqual(this.props.className, nextProps.className)) {
       if (this.ownInstance) {
         this.ownInstance.className = nextProps.className || '';
       }
@@ -306,12 +306,10 @@ class DraggableContainer extends Component<Props> {
 
   shouldComponentUpdate(nextProps: Props): boolean {
     console.log('shouldComponentUpdate');
-    // only update if the draggable or handle or droppable classnames change
+    // only rerender if as is different or children
     if (
-      this.props.draggable !== nextProps.draggable ||
-      this.props.handle !== nextProps.handle ||
-      this.props.droppable !== nextProps.droppable ||
-      this.props.as !== nextProps.as
+      !_.isEqual(this.props.as, nextProps.as) ||
+      !_.isEqual(this.props.children, nextProps.children)
     ) {
       return true;
     }
