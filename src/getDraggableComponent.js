@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, type ComponentType, type Node } from 'react';
+import React, { Component, type ComponentType, type Node } from 'react';
 import DraggableGenericItem, {
   type Props,
   type DraggableItemType,
@@ -9,7 +9,7 @@ import DraggableGenericItem, {
 export default function getDraggableComponent(
   type: DraggableItemType
 ): ComponentType<Props> {
-  return class extends PureComponent<Props> {
+  return class extends Component<Props> {
     render(): Node {
       return <DraggableGenericItem {...this.props} type={type} />;
     }
