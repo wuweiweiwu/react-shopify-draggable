@@ -84,6 +84,7 @@ class DraggableGenericItem extends Component<Props> {
           [this.context.contextWrapper.droppable]: type === 'zone',
         })}
         ref={(element: ?HTMLElement) => {
+          console.log('child ref updated');
           this.ownInstance = element;
         }}
       >
