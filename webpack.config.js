@@ -51,6 +51,7 @@ const config = {
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
+        drop_console: true,
       },
       mangle: false,
       beautify: true,
@@ -135,6 +136,7 @@ switch (target) {
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
+          drop_console: true,
         },
       }),
     ];
