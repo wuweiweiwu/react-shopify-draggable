@@ -18,8 +18,8 @@ class App extends Component {
       draggable: 'draggable-className',
       // handle: 'handle-className',
       // droppable: 'droppable-className',
-      // className: 'testing-className',
-      // id: 'testing-id',
+      className: 'testing-className',
+      id: 'testing-id',
     };
   }
 
