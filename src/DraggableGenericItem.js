@@ -3,6 +3,7 @@
 import React, { Component, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 export type DraggableItemType = 'handle' | 'item' | 'zone';
 
@@ -50,12 +51,12 @@ class DraggableGenericItem extends Component<Props> {
   componentWillReceiveProps(nextProps: Props) {
     console.log('child componentWillReceiveProps');
     // handle id, className without rerendering
-    if (this.props.id !== nextProps.id) {
+    if (!_.isEqual(this.props.id, nextProps.id)) {
       if (this.ownInstance) {
         this.ownInstance.id = nextProps.id || '';
       }
     }
-    if (this.props.className !== nextProps.className) {
+    if (!_.isEqual(this.props.className, nextProps.className)) {
       if (this.ownInstance) {
         this.ownInstance.className = nextProps.className || '';
       }
@@ -64,7 +65,11 @@ class DraggableGenericItem extends Component<Props> {
 
   shouldComponentUpdate(nextProps: Props): boolean {
     console.log('child shouldComponentUpdate');
-    if (this.props.as !== nextProps.as || this.props.type !== nextProps.type) {
+    if (
+      !_.isEqual(this.props.as, nextProps.as) ||
+      !_.isEqual(this.props.children, nextProps.children) ||
+      !_.isEqual(this.props.type, nextProps.type)
+    ) {
       return true;
     }
     return false;
