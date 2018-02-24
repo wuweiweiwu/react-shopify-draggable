@@ -51,7 +51,6 @@
   "dependencies": {
     "@shopify/draggable": "^1.0.0-beta.4",
     "classnames": "^2.2.5",
-    "flow-typed": "^2.3.0",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0"
   },
@@ -88,6 +87,7 @@
     "eslint-plugin-react": "^7.7.0",
     "file-loader": "^1.1.9",
     "flow-bin": "^0.66.0",
+    "flow-typed": "^2.3.0",
     "gh-pages": "^1.1.0",
     "html-webpack-plugin": "^2.30.1",
     "identity-obj-proxy": "^3.0.0",
