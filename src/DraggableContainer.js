@@ -66,6 +66,8 @@ export type Props = {
   onDragOutContainer?: BaseEvent => void,
   onDragStop?: BaseEvent => void,
   onDragPressure?: BaseEvent => void,
+
+  // Mirror events
   onMirrorCreated?: BaseEvent => void,
   onMirrorAttached?: BaseEvent => void,
   onMirrorMove?: BaseEvent => void,
