@@ -33,7 +33,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" style={{ backgroundColor: randomColor() }}>
+      <div className="App">
         <div className="App-body">
           <div className="App-body-count">
             <h1 className="App-body-count-text">Block count:</h1>
@@ -44,9 +44,21 @@ class App extends Component {
               onChange={this.handleBlockCount}
             />
           </div>
-          <div className="BlockGenerator">
-            <div className="Block" style={{ backgroundColor: randomColor() }} />
-          </div>
+          <DraggableContainer
+            as="div"
+            type="sortable"
+            className="BlockGenerator"
+          >
+            {Array.from(Array(this.state.blockCount).keys()).map(number => (
+              <DraggableItem
+                as="div"
+                className="Block"
+                style={{ backgroundColor: randomColor() }}
+              >
+                {number}
+              </DraggableItem>
+            ))}
+          </DraggableContainer>
         </div>
       </div>
     );

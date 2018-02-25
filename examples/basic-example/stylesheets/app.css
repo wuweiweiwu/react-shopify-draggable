@@ -64,7 +64,7 @@
   /* -webkit-transition: -webkit-transform 0.3s ease-in-out; */
   /* transition: -webkit-transform 0.3s ease-in-out; */
   /* -o-transition: transform 0.3s ease-in-out; */
-  transition: transform 0.3s ease-in-out;
+  /* transition: transform 0.3s ease-in-out; */
   /* transition: transform 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out; */
   width: 100px;
 }
@@ -82,7 +82,7 @@
 }
 
 .Block:hover {
-  transform: translate(0, -2px);
+  /* transform: translate(0, -2px); */
 }
 
 .BlockGenerator > * {
