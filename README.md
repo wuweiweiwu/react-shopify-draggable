@@ -37,6 +37,7 @@ Props that will **only** force a re-rendering of child `Draggable` components us
 | as            | `string`                                                          | `'div'`                                                    | what to render this component as                                                            |
 | id            | `string`                                                          |                                                            | id to add to this element                                                                   |
 | className     | `string` or `Array<string>`                                       |                                                            | class(es) to add to this element                                                            |
+| style         | `object`                                                          |                                                            | css inline styling (React style)                                                            |
 | type          | `'draggable'` or `'droppable'` or `'swappable'` or `'sortable'`   | `'draggable'`                                              | what type of `Draggable` instance is it? `Draggable`, `Droppable`, `Swappable`, `Sortable`. |
 | draggable     | `string`                                                          | `'draggable-source'`                                       | the class added to draggable items                                                          |
 | handle        | `string`                                                          | `null`                                                     | the class added to draggable handles                                                        |
@@ -113,6 +114,7 @@ Props that will cause a re-rendering of self (and child components where `should
 | as        | `string`              | `'div'` | what to render this component as                                                            |
 | id        | `string`              |         | id to add to this element                                                                   |
 | className | `string`              |         | class to add to this element (on top of what `DraggableContainer` will inject)              |
+| style     | `object`              |         | css inline styling (React style)                                                            |
 | eleRef    | `HTMLElement => void` |         | exactly like how refs work in React. This ref will return the base element of the component |
 
 ## Implementation details
@@ -135,6 +137,8 @@ shouldComponentUpdate(nextProps: Props): boolean {
 ```
 
 By using context to pass the `draggable`, `handle`, `droppable` options to child components. It means that `<DraggableItem/>`,`<DraggableHandle/>`, `<DroppableZone/>` can be nested infinitely inside other components and it will always receive these update. This functionality is implemented following this concept in this article [How to use React Context safely](https://medium.com/@mweststrate/how-to-safely-use-react-context-b7e343eff076). Thus you can even use `Redux` with this component and there will be no problems.
+
+Setting inline styles without rerendering involved stealing some code from [Facebook React](https://github.com/facebook/react/blob/37e4329bc81def4695211d6e3795a654ef4d84f5/packages/react-dom/src/shared/CSSPropertyOperations.js)
 
 ## Contributing
 
