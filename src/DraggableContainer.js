@@ -193,6 +193,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   instantiateDraggableInstance(props: Props) {
+    console.log('instantiateDraggableInstance');
     const {
       draggable,
       handle,
@@ -211,7 +212,6 @@ class DraggableContainer extends Component<Props> {
     // IMPORTANT NEED TO DESTROY PREVIOUS INSTANCE
     if (this.draggableInstance) {
       this.draggableInstance.destroy();
-      console.log('destroy instance');
     }
 
     let options = {};
@@ -239,7 +239,6 @@ class DraggableContainer extends Component<Props> {
     });
 
     if (this.ownInstance) {
-      console.log('creating new instance');
       switch (draggableType) {
         case 'droppable':
           this.draggableInstance = new Droppable(this.ownInstance, options);
@@ -259,7 +258,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    // console.log('componentDidMount');
     const { dragRef, eleRef } = this.props;
 
     // creates the Draggable instance and register events
@@ -280,16 +279,14 @@ class DraggableContainer extends Component<Props> {
     console.log('componentWillReceiveProps');
     // decide if we want to update the context and force the children to rerender
     if (
-      this.props.draggable !== nextProps.draggable ||
-      this.props.handle !== nextProps.handle ||
-      this.props.droppable !== nextProps.droppable
+      !_.isEqual(this.props.draggable, nextProps.draggable) ||
+      !_.isEqual(this.props.handle, nextProps.handle) ||
+      !_.isEqual(this.props.droppable, nextProps.droppable)
     ) {
       this.contextWrapper.update(nextProps);
+      this.instantiateDraggableInstance(nextProps);
+      this.registerEvents(nextProps);
     }
-
-    // recreates the Draggable instance and register events
-    this.instantiateDraggableInstance(nextProps);
-    this.registerEvents(nextProps);
 
     // handle id, className without rerendering
     if (!_.isEqual(this.props.id, nextProps.id)) {
@@ -314,13 +311,6 @@ class DraggableContainer extends Component<Props> {
       return true;
     }
     return false;
-  }
-
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-    // recreates the Draggable instance and register events
-    this.instantiateDraggableInstance(this.props);
-    this.registerEvents(this.props);
   }
 
   componentWillUnmount() {
