@@ -186,7 +186,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   instantiateDraggableInstance(props: Props) {
-    console.log('instantiateDraggableInstance');
+    console.warn('instantiateDraggableInstance');
     const {
       draggable,
       handle,
@@ -251,7 +251,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentDidMount() {
-    // console.log('componentDidMount');
+    // console.warn('componentDidMount');
     const { dragRef, eleRef } = this.props;
 
     // creates the Draggable instance and register events
@@ -269,7 +269,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    console.log('componentWillReceiveProps');
+    console.warn('componentWillReceiveProps');
     // decide if we want to update the context
     if (
       propertiesChanged(this.props, nextProps, [
@@ -326,7 +326,7 @@ class DraggableContainer extends Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
-    console.log('shouldComponentUpdate');
+    console.warn('shouldComponentUpdate');
     // only rerender if as is different or children
     if (propertiesChanged(this.props, nextProps, ['as', 'children'])) {
       return true;
@@ -335,14 +335,14 @@ class DraggableContainer extends Component<Props> {
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount');
+    console.warn('componentWillUnmount');
     if (this.draggableInstance) {
       this.draggableInstance.destroy();
     }
   }
 
   render(): Node {
-    console.log('render');
+    console.warn('render');
     const { as: ElementType, id, className, children, style } = this.props;
 
     return (
@@ -352,7 +352,7 @@ class DraggableContainer extends Component<Props> {
         className={classNames(className)}
         style={style}
         ref={(element: ?HTMLElement) => {
-          console.log('ref updated');
+          console.warn('ref updated');
           this.ownInstance = element;
         }}
       >
