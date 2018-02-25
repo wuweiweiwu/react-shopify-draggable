@@ -14,7 +14,8 @@ import {
   Sortable,
 } from '@shopify/draggable';
 import ContextWrapper from './ContextWrapper';
-import { propertiesChanged } from './util';
+import { propertiesChanged } from './utils/propertiesChanged';
+import { setValueForStyles } from './utils/CSSPropertyOperations';
 
 const { Sensor: BaseSensor } = Sensors;
 
@@ -31,6 +32,9 @@ export type Props = {
 
   // children
   children: Node,
+
+  // inline react style
+  style: {},
 
   // dragRef so you can access the Draggable object to override stuff if u want. Like event listeners
   dragRef?: (?Draggable) => void,
@@ -311,6 +315,14 @@ class DraggableContainer extends Component<Props> {
         this.ownInstance.className = classNames(nextProps.className);
       }
     }
+
+    // setting style properties
+    if (!_.isEqual(this.props.style, nextProps.style)) {
+      if (this.ownInstance) {
+        this.ownInstance.removeAttribute('style');
+        setValueForStyles(this.ownInstance, nextProps.style);
+      }
+    }
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
@@ -331,13 +343,14 @@ class DraggableContainer extends Component<Props> {
 
   render(): Node {
     console.log('render');
-    const { as: ElementType, id, className, children } = this.props;
+    const { as: ElementType, id, className, children, style } = this.props;
 
     return (
       <ElementType
         id={id}
         // $FlowFixMe
         className={classNames(className)}
+        style={style}
         ref={(element: ?HTMLElement) => {
           console.log('ref updated');
           this.ownInstance = element;

@@ -4,7 +4,8 @@ import React, { Component, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { propertiesChanged } from './util';
+import { propertiesChanged } from './utils/propertiesChanged';
+import { setValueForStyles } from './utils/CSSPropertyOperations';
 
 export type DraggableItemType = 'handle' | 'item' | 'zone';
 
@@ -17,6 +18,9 @@ export type Props = {
 
   // id for the container
   id?: string,
+
+  // inline react style
+  style: {},
 
   children?: Node,
 
@@ -66,6 +70,13 @@ class DraggableGenericItem extends Component<Props> {
         this.ownInstance.className = nextProps.className || '';
       }
     }
+    // setting style properties
+    if (!_.isEqual(this.props.style, nextProps.style)) {
+      if (this.ownInstance) {
+        this.ownInstance.removeAttribute('style');
+        setValueForStyles(this.ownInstance, nextProps.style);
+      }
+    }
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
@@ -79,7 +90,14 @@ class DraggableGenericItem extends Component<Props> {
 
   render(): Node {
     console.log('child render');
-    const { as: ElementType, className, id, children, type } = this.props;
+    const {
+      as: ElementType,
+      className,
+      id,
+      children,
+      type,
+      style,
+    } = this.props;
 
     return (
       <ElementType
@@ -90,6 +108,7 @@ class DraggableGenericItem extends Component<Props> {
           [this.context.contextWrapper.handle]: type === 'handle',
           [this.context.contextWrapper.droppable]: type === 'zone',
         })}
+        style={style}
         ref={(element: ?HTMLElement) => {
           console.log('child ref updated');
           this.ownInstance = element;
