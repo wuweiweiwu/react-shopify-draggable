@@ -16,5 +16,6 @@ module.file_ext=.jsx
 module.file_ext=.css
 module.file_ext=.scss
 module.file_ext=.ico
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 
 [strict]

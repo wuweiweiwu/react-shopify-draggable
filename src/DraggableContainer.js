@@ -3,6 +3,7 @@
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import classNames from 'classnames';
 import {
   BaseEvent,
   BasePlugin,
@@ -13,6 +14,7 @@ import {
   Sortable,
 } from '@shopify/draggable';
 import ContextWrapper from './ContextWrapper';
+import { propertiesChanged } from './util';
 
 const { Sensor: BaseSensor } = Sensors;
 
@@ -22,7 +24,7 @@ export type Props = {
   as: string,
 
   // classname for the container
-  className?: string,
+  className?: string | Array<string>,
 
   // id for the container
   id?: string,
@@ -173,28 +175,6 @@ class DraggableContainer extends Component<Props> {
     });
   }
 
-  /* eslint-disable-next-line class-methods-use-this */
-  propertiesChanged(
-    props: Props,
-    nextProps: Props,
-    properties: Array<string>
-  ): boolean {
-    let hasDifference = false;
-    _.forEach(properties, (property: string): boolean => {
-      if (
-        !_.isEqual(
-          _.get(props, property, null),
-          _.get(nextProps, property, null)
-        )
-      ) {
-        hasDifference = true;
-        return false;
-      }
-      return true;
-    });
-    return hasDifference;
-  }
-
   getChildContext(): { contextWrapper: ContextWrapper } {
     return {
       contextWrapper: this.contextWrapper,
@@ -288,7 +268,7 @@ class DraggableContainer extends Component<Props> {
     console.log('componentWillReceiveProps');
     // decide if we want to update the context
     if (
-      this.propertiesChanged(this.props, nextProps, [
+      propertiesChanged(this.props, nextProps, [
         'draggable',
         'handle',
         'droppable',
@@ -300,7 +280,7 @@ class DraggableContainer extends Component<Props> {
     // decide f we want to reinstantiate the draggable instance
     // compare all the options
     if (
-      this.propertiesChanged(this.props, nextProps, [
+      propertiesChanged(this.props, nextProps, [
         'draggable',
         'handle',
         'droppable',
@@ -327,7 +307,8 @@ class DraggableContainer extends Component<Props> {
     }
     if (!_.isEqual(this.props.className, nextProps.className)) {
       if (this.ownInstance) {
-        this.ownInstance.className = nextProps.className || '';
+        // $FlowFixMe
+        this.ownInstance.className = classNames(nextProps.className);
       }
     }
   }
@@ -335,7 +316,7 @@ class DraggableContainer extends Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     console.log('shouldComponentUpdate');
     // only rerender if as is different or children
-    if (this.propertiesChanged(this.props, nextProps, ['as', 'children'])) {
+    if (propertiesChanged(this.props, nextProps, ['as', 'children'])) {
       return true;
     }
     return false;
@@ -355,7 +336,8 @@ class DraggableContainer extends Component<Props> {
     return (
       <ElementType
         id={id}
-        className={className}
+        // $FlowFixMe
+        className={classNames(className)}
         ref={(element: ?HTMLElement) => {
           console.log('ref updated');
           this.ownInstance = element;

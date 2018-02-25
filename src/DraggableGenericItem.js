@@ -4,6 +4,7 @@ import React, { Component, type Node } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { propertiesChanged } from './util';
 
 export type DraggableItemType = 'handle' | 'item' | 'zone';
 
@@ -38,28 +39,6 @@ class DraggableGenericItem extends Component<Props> {
     type: 'item',
   };
 
-  /* eslint-disable-next-line class-methods-use-this */
-  propertiesChanged(
-    props: Props,
-    nextProps: Props,
-    properties: Array<string>
-  ): boolean {
-    let hasDifference = false;
-    _.forEach(properties, (property: string): boolean => {
-      if (
-        !_.isEqual(
-          _.get(props, property, null),
-          _.get(nextProps, property, null)
-        )
-      ) {
-        hasDifference = true;
-        return false;
-      }
-      return true;
-    });
-    return hasDifference;
-  }
-
   componentDidMount() {
     console.log('child componentDidMount');
     // subscribe to context updates
@@ -92,9 +71,7 @@ class DraggableGenericItem extends Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     console.log('child shouldComponentUpdate');
     // type should never change. its passed from the HOC
-    if (
-      this.propertiesChanged(this.props, nextProps, ['as', 'children', 'type'])
-    ) {
+    if (propertiesChanged(this.props, nextProps, ['as', 'children', 'type'])) {
       return true;
     }
     return false;
