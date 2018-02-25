@@ -1,7 +1,6 @@
 {
   "name": "@wuweiweiwu/react-shopify-draggable",
   "version": "0.0.1",
-  "private": true,
   "main": "dist/main.js",
   "files": [
     "dist"
@@ -12,7 +11,7 @@
     "clean": "rimraf dist",
     "clean:demo": "rimraf build",
     "start": "cross-env NODE_ENV=development TARGET=development webpack-dev-server --inline --hot",
-    "lint": "./node_modules/.bin/eslint src examples",
+    "lint": "./node_modules/.bin/eslint src",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"{src,examples}/**/*.{js,scss}\"",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "test": "jest",
