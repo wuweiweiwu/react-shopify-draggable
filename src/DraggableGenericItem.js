@@ -102,8 +102,7 @@ class DraggableGenericItem extends Component<Props> {
     return (
       <ElementType
         id={id}
-        className={classNames({
-          className,
+        className={classNames(className, {
           [this.context.contextWrapper.draggable]: type === 'item',
           [this.context.contextWrapper.handle]: type === 'handle',
           [this.context.contextWrapper.droppable]: type === 'zone',
