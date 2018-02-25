@@ -41,7 +41,11 @@ class DraggableGenericItem extends Component<Props> {
   componentDidMount() {
     console.log('child componentDidMount');
     // subscribe to context updates
-    this.context.contextWrapper.subscribe((): void => this.forceUpdate());
+    this.context.contextWrapper.subscribe((): void => {
+      if (this.ownInstance) {
+        this.forceUpdate();
+      }
+    });
 
     if (this.props.eleRef) {
       this.props.eleRef(this.ownInstance);
