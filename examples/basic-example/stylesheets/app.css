@@ -1,0 +1,102 @@
+/* // @import './vendor/stylesheet';
+// @import './vendor/github-light'; */
+
+.App {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: 735px;
+}
+
+.App-body {
+  margin: 0 auto;
+  max-width: 780px;
+  padding-bottom: 40px;
+}
+
+.App-body-count {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-bottom: 80px;
+  margin-top: 40px;
+}
+
+.App-body-count-text {
+  color: #e0e0e0;
+  font-size: 60px;
+  letter-spacing: -1px;
+  margin: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.App-body-count-input {
+  border: none;
+  color: #e0e0e0;
+  font-size: 180px;
+  height: 140px;
+  letter-spacing: -8px;
+  margin-left: 20px;
+  outline-color: #212121;
+  outline-width: 1px;
+  width: 300px;
+}
+
+.BlockGenerator {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -8px;
+}
+
+.Block {
+  -ms-flex-align: center;
+  align-items: center;
+  /* cursor: -webkit-grab; */
+  cursor: grab;
+  /* display: -ms-flexbox; */
+  display: flex;
+  height: 40px;
+  /* -ms-flex-pack: center; */
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  /* -webkit-transition: -webkit-transform 0.3s ease-in-out; */
+  /* transition: -webkit-transform 0.3s ease-in-out; */
+  /* -o-transition: transform 0.3s ease-in-out; */
+  transition: transform 0.3s ease-in-out;
+  /* transition: transform 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out; */
+  width: 100px;
+}
+
+.Block:before {
+  background: #bdbdbd;
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.Block:hover {
+  transform: translate(0, -2px);
+}
+
+.BlockGenerator > * {
+  margin-left: 8px;
+  margin-top: 8px;
+}
+
+/* Hide HTML5 Up and Down arrows. */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}

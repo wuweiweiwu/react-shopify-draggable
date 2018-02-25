@@ -1,58 +1,54 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component, Fragment } from 'react';
-
-import '../shared/favicon/favicon.ico';
+import classnames from 'classnames';
 import {
   DraggableItem,
   DraggableContainer,
   DraggableHandle,
   DroppableZone,
 } from '../../src';
-import NestedItem from './nestedItem';
+
+import '../shared/favicon/favicon.ico';
+import './stylesheets/app.css';
+
+const random255 = () => Math.floor(Math.random() * 256);
+const randomColor = () => `rgb(${random255()}, ${random255()}, ${random255()})`;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      as: 'ul',
-      draggable: 'draggable-className',
-      // handle: 'handle-className',
-      // droppable: 'droppable-className',
-      className: 'testing-className',
-      id: 'testing-id',
-      hasChild: true,
-      timer: 0,
+      blockCount: 14,
     };
+    this.handleBlockCount = this.handleBlockCount.bind(this);
   }
 
-  componentDidMount() {
-    setInterval(
-      () =>
-        this.setState(prevState => ({
-          timer: prevState.timer + 1,
-        })),
-      1000
-    );
+  handleBlockCount(e) {
+    if (e.target.value) {
+      this.setState({
+        blockCount: parseInt(e.target.value),
+      });
+    }
   }
+
   render() {
     return (
-      <Fragment>
-        <div>my own timer {this.state.timer}</div>
-
-        <DraggableContainer {...this.state} type="sortable">
-          {/* <DraggableItem as="li">
-            WHATEVER 1<NestedItem />
-          </DraggableItem> */}
-          <DraggableItem as="li">
-            WHATEVER 2<NestedItem />
-          </DraggableItem>
-          {this.state.hasChild && (
-            <DraggableItem as="li">
-              WHATEVER 3<NestedItem />
-            </DraggableItem>
-          )}
-        </DraggableContainer>
-      </Fragment>
+      <div className="App" style={{ backgroundColor: randomColor() }}>
+        <div className="App-body">
+          <div className="App-body-count">
+            <h1 className="App-body-count-text">Block count:</h1>
+            <input
+              type="number"
+              className="App-body-count-input"
+              value={this.state.blockCount}
+              onChange={this.handleBlockCount}
+            />
+          </div>
+          <div className="BlockGenerator">
+            <div className="Block" style={{ backgroundColor: randomColor() }} />
+          </div>
+        </div>
+      </div>
     );
   }
 }

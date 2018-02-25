@@ -27,12 +27,12 @@ const postcssLoader = {
 
 const cssLoader = isLocal => ({
   loader: 'css-loader',
-  options: {
-    modules: true,
-    '-autoprefixer': true,
-    importLoaders: true,
-    localIdentName: isLocal ? 'rst__[local]' : null,
-  },
+  // options: {
+  //   modules: true,
+  //   '-autoprefixer': true,
+  //   importLoaders: true,
+  //   localIdentName: isLocal ? 'rst__[local]' : null,
+  // },
 });
 
 const config = {
