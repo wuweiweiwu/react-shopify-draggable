@@ -13,7 +13,6 @@ export function propertiesChanged(
       !_.isEqual(_.get(props, property, null), _.get(nextProps, property, null))
     ) {
       hasDifference = true;
-      return false;
     }
     return true;
   });

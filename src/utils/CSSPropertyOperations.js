@@ -71,7 +71,6 @@ export function setValueForStyles(node, styles) {
     if (styleName === 'float') {
       styleName = 'cssFloat';
     }
-    console.log('style', styleName, styleValue);
     if (isCustomProperty) {
       style.setProperty(styleName, styleValue);
     } else {
