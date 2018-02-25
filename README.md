@@ -24,7 +24,7 @@ Props that will cause a re-rendering of self (and also child components if `shou
 * `as`
 * `children` (Nodes passed/nested as children)
 
-Props that will **only** cause a re-rendering of child `Draggable` components:
+Props that will **only** force a re-rendering of child `Draggable` components using `forceUpdate`:
 
 * `draggable`
 * `handle`
@@ -34,7 +34,7 @@ Props that will **only** cause a re-rendering of child `Draggable` components:
 | ------------- | ----------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | as            | `string`                                                          | `'div'`                                                    | what to render this component as                                                            |
 | id            | `string`                                                          |                                                            | id to add to this element                                                                   |
-| className     | `string` or `Array<string>`                                       |                                                            | class to add to this element                                                                |
+| className     | `string` or `Array<string>`                                       |                                                            | class(es) to add to this element                                                            |
 | type          | `'draggable'` or `'droppable'` or `'swappable'` or `'sortable'`   | `'draggable'`                                              | what type of `Draggable` instance is it? `Draggable`, `Droppable`, `Swappable`, `Sortable`. |
 | draggable     | `string`                                                          | `'draggable-source'`                                       | the class added to draggable items                                                          |
 | handle        | `string`                                                          | `null`                                                     | the class added to draggable handles                                                        |
@@ -53,7 +53,7 @@ Props that will **only** cause a re-rendering of child `Draggable` components:
 
 for more documentation on these see @shopify/draggable
 
-ex: `onDragStart` is the same as `'drag:start'`
+ex: `onDragStart` is the same as `'drag:start'` and `onSwappableStart` is the same as `'swappable:start'`
 
 ```javascript
 // Draggable events
@@ -112,6 +112,27 @@ Props that will cause a re-rendering of self (and child components where `should
 | id        | `string`              |         | id to add to this element                                                                   |
 | className | `string`              |         | class to add to this element (on top of what `DraggableContainer` will inject)              |
 | eleRef    | `HTMLElement => void` |         | exactly like how refs work in React. This ref will return the base element of the component |
+
+## Implementation details
+
+`@wuweiweiwu/react-shopify-react` was built to address `@shopify/draggable` issue [#32](https://github.com/Shopify/draggable/issues/34) where users were having trouble integrating Draggable with React because re renders would cause the state of the Draggable elements to reset. Unless you wanted to implement the details of `shouldComponentUpdate` and `componentWillReceiveProps` it would be difficult to use `Draggable` with React.
+
+This component provides a `<DraggableContainer/>` that represents the Draggable container that contains draggable elements. It also provides the classnames that child `Draggable` components will have. For example: instead of specifying the `draggable` option and also putting that class explicitly in your HTML it uses React [Context](https://reactjs.org/docs/context.html) to pass down the class names internally. Thus you should **NOT** nest `<DraggableContainer/>` inside each other.
+
+Deciding when to rerender in React is a little finicky. If we don't want the internal `Draggable` state to change on renders then we need to implement our `shouldComponentUpdate` functions and decide how to update properties such as `id` and `className` without causing a rerender. `<DraggableContainer/>` and other components provided in this package should only rerender if you are changing `as` or `children` prop. Other prop changes should not cause a rerender, event options passed to `@shopify/draggable`. Thus we maintain an internal instance of `Draggable` that is updated in the React lifecycle function `componentWillReceiveProps` which is called when the component received new or updated props. Thus we can reset/update the instance without causing a rerender.
+
+```javascript
+shouldComponentUpdate(nextProps: Props): boolean {
+  console.log('shouldComponentUpdate');
+  // only rerender if as or children is different
+  if (propertiesChanged(this.props, nextProps, ['as', 'children'])) {
+    return true;
+  }
+  return false;
+}
+```
+
+By using context to pass the `draggable`, `handle`, `droppable` options to child components. It means that `<DraggableItem/>`,`<DraggableHandle/>`, `<DroppableZone/>` can be nested infinitely inside other components and it will always receive these update. This functionality is implemented following this concept in this article [How to use React Context safely](https://medium.com/@mweststrate/how-to-safely-use-react-context-b7e343eff076). Thus you can even use `Redux` with this component and there will be no problems.
 
 ## Contributing
 
