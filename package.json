@@ -1,10 +1,33 @@
 {
   "name": "@wuweiweiwu/react-shopify-draggable",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/main.js",
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuweiweiwu/react-shopify-draggable.git"
+  },
+  "author": {
+    "name": "Wei-Wei Wu",
+    "email": "hello@weiweiwu.me",
+    "url": "https://github.com/wuweiweiwu"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wuweiweiwu/react-shopify-draggable/issues"
+  },
+  "keywords": [
+    "draggable",
+    "react",
+    "component",
+    "shopify",
+    "flow",
+    "context",
+    "classnames"
+  ],
+  "homepage": "https://github.com/wuweiweiwu/react-shopify-draggable#readme",
   "scripts": {
     "build": "npm run clean && cross-env NODE_ENV=production TARGET=umd webpack --bail",
     "build:demo": "npm run clean:demo && cross-env NODE_ENV=production TARGET=demo webpack --bail && npm run build-storybook",

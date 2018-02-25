@@ -1,5 +1,7 @@
 # React Shopify Draggable
 
+[![npm version](https://badge.fury.io/js/%40wuweiweiwu%2Freact-shopify-draggable.svg)](https://badge.fury.io/js/%40wuweiweiwu%2Freact-shopify-draggable)
+
 Port of [@shopify/draggable](https://github.com/Shopify/draggable) to React
 
 ```bash

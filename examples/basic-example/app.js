@@ -1,5 +1,5 @@
 /* eslint-disable react/prefer-stateless-function */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import '../shared/favicon/favicon.ico';
 import {
@@ -20,16 +20,39 @@ class App extends Component {
       // droppable: 'droppable-className',
       className: 'testing-className',
       id: 'testing-id',
+      hasChild: true,
+      timer: 0,
     };
   }
 
+  componentDidMount() {
+    setInterval(
+      () =>
+        this.setState(prevState => ({
+          timer: prevState.timer + 1,
+        })),
+      1000
+    );
+  }
   render() {
     return (
-      <DraggableContainer {...this.state} type="sortable">
-        <DraggableItem as="li">WHATEVER 1</DraggableItem>
-        <DraggableItem as="li">WHATEVER 2</DraggableItem>
-        <DraggableItem as="li">WHATEVER 3</DraggableItem>
-      </DraggableContainer>
+      <Fragment>
+        <div>my own timer {this.state.timer}</div>
+
+        <DraggableContainer {...this.state} type="sortable">
+          {/* <DraggableItem as="li">
+            WHATEVER 1<NestedItem />
+          </DraggableItem> */}
+          <DraggableItem as="li">
+            WHATEVER 2<NestedItem />
+          </DraggableItem>
+          {this.state.hasChild && (
+            <DraggableItem as="li">
+              WHATEVER 3<NestedItem />
+            </DraggableItem>
+          )}
+        </DraggableContainer>
+      </Fragment>
     );
   }
 }
