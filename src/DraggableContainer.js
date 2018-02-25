@@ -17,6 +17,7 @@ import ContextWrapper from './ContextWrapper';
 const { Sensor: BaseSensor } = Sensors;
 
 export type Props = {
+  /* eslint-disable react/no-unused-prop-types */
   // what to render the container as
   as: string,
 
@@ -44,7 +45,6 @@ export type Props = {
   // classname for the droppable area
   droppable: ?string,
 
-  /* eslint-disable react/no-unused-prop-types */
   sensors: Array<BaseSensor>,
   plugins: Array<BasePlugin>,
   delay: number,
@@ -173,18 +173,27 @@ class DraggableContainer extends Component<Props> {
     });
   }
 
-  // unregisterEvents(props: Props) {
-  //   /* eslint-disable-next-line flowtype/no-weak-types */
-  //   _.forOwn(props, (propValue: any, propName: string) => {
-  //     if (_.startsWith(propName, 'on') && _.isFunction(props[propName])) {
-  //       const words = _.words(propName).slice(1);
-  //       const eventName = _.toLower(_.join(words, ':'));
-  //       if (this.draggableInstance) {
-  //         this.draggableInstance.off(eventName, propValue);
-  //       }
-  //     }
-  //   });
-  // }
+  /* eslint-disable-next-line class-methods-use-this */
+  propertiesChanged(
+    props: Props,
+    nextProps: Props,
+    properties: Array<string>
+  ): boolean {
+    let hasDifference = false;
+    _.forEach(properties, (property: string): boolean => {
+      if (
+        !_.isEqual(
+          _.get(props, property, null),
+          _.get(nextProps, property, null)
+        )
+      ) {
+        hasDifference = true;
+        return false;
+      }
+      return true;
+    });
+    return hasDifference;
+  }
 
   getChildContext(): { contextWrapper: ContextWrapper } {
     return {
@@ -277,13 +286,35 @@ class DraggableContainer extends Component<Props> {
 
   componentWillReceiveProps(nextProps: Props) {
     console.log('componentWillReceiveProps');
-    // decide if we want to update the context and force the children to rerender
+    // decide if we want to update the context
     if (
-      !_.isEqual(this.props.draggable, nextProps.draggable) ||
-      !_.isEqual(this.props.handle, nextProps.handle) ||
-      !_.isEqual(this.props.droppable, nextProps.droppable)
+      this.propertiesChanged(this.props, nextProps, [
+        'draggable',
+        'handle',
+        'droppable',
+      ])
     ) {
       this.contextWrapper.update(nextProps);
+    }
+
+    // decide f we want to reinstantiate the draggable instance
+    // compare all the options
+    if (
+      this.propertiesChanged(this.props, nextProps, [
+        'draggable',
+        'handle',
+        'droppable',
+        'classes',
+        'delay',
+        'sensors',
+        'plugins',
+        'appendTo',
+        'mirror',
+        'collidable',
+        'swapAnimation',
+        'type',
+      ])
+    ) {
       this.instantiateDraggableInstance(nextProps);
       this.registerEvents(nextProps);
     }
@@ -304,10 +335,7 @@ class DraggableContainer extends Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     console.log('shouldComponentUpdate');
     // only rerender if as is different or children
-    if (
-      !_.isEqual(this.props.as, nextProps.as) ||
-      !_.isEqual(this.props.children, nextProps.children)
-    ) {
+    if (this.propertiesChanged(this.props, nextProps, ['as', 'children'])) {
       return true;
     }
     return false;

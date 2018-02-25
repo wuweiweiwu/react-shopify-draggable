@@ -38,10 +38,32 @@ class DraggableGenericItem extends Component<Props> {
     type: 'item',
   };
 
+  /* eslint-disable-next-line class-methods-use-this */
+  propertiesChanged(
+    props: Props,
+    nextProps: Props,
+    properties: Array<string>
+  ): boolean {
+    let hasDifference = false;
+    _.forEach(properties, (property: string): boolean => {
+      if (
+        !_.isEqual(
+          _.get(props, property, null),
+          _.get(nextProps, property, null)
+        )
+      ) {
+        hasDifference = true;
+        return false;
+      }
+      return true;
+    });
+    return hasDifference;
+  }
+
   componentDidMount() {
     console.log('child componentDidMount');
     // subscribe to context updates
-    this.context.contextWrapper.subscribe((): void => {
+    this.context.contextWrapper.subscribe(() => {
       if (this.ownInstance) {
         this.forceUpdate();
       }
@@ -69,10 +91,9 @@ class DraggableGenericItem extends Component<Props> {
 
   shouldComponentUpdate(nextProps: Props): boolean {
     console.log('child shouldComponentUpdate');
+    // type should never change. its passed from the HOC
     if (
-      !_.isEqual(this.props.as, nextProps.as) ||
-      !_.isEqual(this.props.children, nextProps.children) ||
-      !_.isEqual(this.props.type, nextProps.type)
+      this.propertiesChanged(this.props, nextProps, ['as', 'children', 'type'])
     ) {
       return true;
     }
