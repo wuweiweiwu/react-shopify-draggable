@@ -19,7 +19,7 @@ This is the base component that wraps `<DraggableItem/>`,`<DraggableHandle/>`, `
 
 You specify the `draggable`, `handle`, `droppable` props in this component and they will automatically be passed (deeply) to the `Draggable` children via React Context
 
-Props that will cause a re-rendering of self (and also child `Draggable` components if `shouldComponentUpdate` returns true):
+Props that will cause a re-rendering of self (and also child components if `shouldComponentUpdate` returns true):
 
 * `as`
 * `children` (Nodes passed/nested as children)
